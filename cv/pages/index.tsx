@@ -17,7 +17,10 @@ export default function Home() {
                     </p>
                 </div>
                 <div className="flex gap-4">
-                    <a className="px-6 py-3 bg-[#F9EC91] rounded-md text-black text-sm font-semibold">
+                    <a
+                        className="px-6 py-3 bg-[#F9EC91] rounded-md text-black text-sm font-semibold"
+                        href="/start"
+                    >
                         Commencer
                     </a>
                     <a className="px-6 py-3 rounded-md border border-white/20 text-white/80 text-sm font-semibold">
@@ -25,6 +28,10 @@ export default function Home() {
                     </a>
                 </div>
                 <div className="h-60"></div>
+            </div>
+            <div id="fonctionnement">
+                <h1>Hello World</h1>
+                <p></p>
             </div>
         </main>
     );

@@ -1,14 +1,16 @@
+import Footer from "../components/footer";
 import NavBar from "../components/navbar";
+import metiers from "../data/metiers.json";
 
 export default function Home() {
     return (
         <main>
             <NavBar />
-            <h1 className="text-3xl font-bold mt-12 tracking-tight">
+            <h1 className="text-3xl font-bold mt-12 tracking-tight text-black">
                 Créer un nouvel entretien
             </h1>
             <form
-                className="p-7 rounded-lg border border-black/10 bg-white/40 w-full mt-4"
+                className="p-7 rounded-lg border border-black/10 bg-white/40 w-full mt-4 text-black"
                 action="/api/create-interview"
                 method="GET"
             >
@@ -29,6 +31,7 @@ export default function Home() {
                                 id="prenom_candidat"
                                 placeholder="John"
                                 className="border border-black/10 p-2  bg-white rounded-md text-sm"
+                                name="prenom_candidat"
                             />
                         </div>
                         <div className="flex flex-col gap-1 w-full">
@@ -43,6 +46,7 @@ export default function Home() {
                                 id="nom_candidat"
                                 placeholder="Doe"
                                 className="border border-black/10 p-2 bg-white rounded-md text-sm"
+                                name="nom_candidat"
                             />
                         </div>
                     </div>
@@ -58,6 +62,7 @@ export default function Home() {
                             id="email_candidat"
                             placeholder="john.doe@example.com"
                             className="border border-black/10 p-2 bg-white rounded-md text-sm"
+                            name="email_candidat"
                         />
                     </div>
                 </div>
@@ -115,7 +120,7 @@ export default function Home() {
                         Fiche d&apos;emploi
                     </h2>
                     <div className="flex gap-3 w-full justify-between">
-                        <div className="flex flex-col gap-1 w-full">
+                        <div className="flex flex-col gap-1 max-w-[50%]">
                             <label
                                 className="text-sm font-bold"
                                 htmlFor="type_emploi"
@@ -125,13 +130,17 @@ export default function Home() {
                             <select
                                 id="type_emploi"
                                 className="border border-black/10 p-2  bg-white rounded-md text-sm"
+                                name="type_emploi"
                             >
-                                <option value="soudure à l'arc" selected>
-                                    Soudure à l&apos;arc
-                                </option>
-                                <option value="soudure au laser">
-                                    Soudure au laser
-                                </option>
+                                {metiers.map((metier, i) => (
+                                    <option
+                                        value={metier.libelle}
+                                        key={metier.libelle}
+                                        selected={i === 0}
+                                    >
+                                        {metier.libelle}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                         <div className="flex flex-col gap-1 w-full">
@@ -146,6 +155,7 @@ export default function Home() {
                                 id="emplacement"
                                 placeholder="Pau, Pyrénées-Atlantiques"
                                 className="border border-black/10 p-2 bg-white rounded-md text-sm"
+                                name="emplacement"
                             />
                         </div>
                     </div>
@@ -160,6 +170,7 @@ export default function Home() {
                             id="informations_supplementaires"
                             placeholder="expérience requise, compétences recherchées, etc."
                             className="border border-black/10 p-2 bg-white rounded-md text-sm"
+                            name="informations_supplementaires"
                         />
                     </div>
                 </div>
@@ -170,6 +181,7 @@ export default function Home() {
                     Créer l&apos;entretien
                 </button>
             </form>
+            <Footer />
         </main>
     );
 }

@@ -18,6 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
                     max-width: 780px;
                     margin: 0 auto;
                     padding: 4px;
+                    margin-bottom: 128px;
                 }
             `}</style>
             <Component className={inter.className} {...pageProps} />

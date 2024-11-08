@@ -4,7 +4,7 @@ export default function Footer() {
             <footer className="p-4 rounded-lg border border-black/10 bg-white/30 mt-6">
                 <a className="flex gap-2 items-center" href="/">
                     <img src="/favicon.svg" alt="Logo" className="h-4 w-4" />
-                    <h1 className="text-sm font-semibold text-black/80">
+                    <h1 className="text-sm font-semibold text-black/90">
                         Curriculum Video
                     </h1>
                 </a>

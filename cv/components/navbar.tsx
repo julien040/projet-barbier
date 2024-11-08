@@ -10,19 +10,13 @@ function NavBar() {
             <div className="flex gap-6 text-sm items-center">
                 <a
                     href="/#fonctionnement"
-                    className="text-black/70 hover:text-black/80"
+                    className="text-black/70 hover:text-black"
                 >
                     Fonctionnement
                 </a>
                 <a
-                    href="/#fonctionnement"
-                    className="text-black/70 hover:text-black/80"
-                >
-                    Résultats
-                </a>
-                <a
-                    href="/start"
-                    className="text-black/70 bg-[#f9eb7d] rounded-lg text-sm px-6 py-2 font-semibold border border-black/10"
+                    href="/candidature/start"
+                    className="text-black/70 bg-[#f9eb7d] hover:bg-[#ffed67] transition-all rounded-lg text-sm px-6 py-2 font-semibold border border-black/10"
                 >
                     Commencer
                 </a>

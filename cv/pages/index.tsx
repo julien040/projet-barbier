@@ -20,7 +20,7 @@ export default function Home() {
                 <div className="flex gap-4">
                     <a
                         className="px-6 py-2 bg-[#ffee6f] rounded-md text-black text-sm font-semibold hover:bg-[#fce745] transition-all"
-                        href="/start"
+                        href="/candidature/start"
                     >
                         Commencer
                     </a>

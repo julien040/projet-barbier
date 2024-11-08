@@ -23,13 +23,17 @@ export class Candidature {
     employeur_email!: string;
 
     // Formulaire
-    @Column()
+    @Column({
+        type: "text",
+    })
     formulaire_metier!: string;
 
     @Column()
     formulaire_emplacement!: string;
 
-    @Column()
+    @Column({
+        type: "longtext",
+    })
     formulaire_info_supplementaire!: string;
 
     // Données de la vidéo
@@ -39,13 +43,17 @@ export class Candidature {
     @Column()
     video_remodele_path!: string;
 
-    @Column()
+    @Column({
+        type: "longtext",
+    })
     transcription!: string;
 
     @Column()
     date_soumission!: Date;
 
-    @Column()
+    @Column({
+        default: "En attente",
+    })
     status!: string;
 
     // Résultat de l'analyse

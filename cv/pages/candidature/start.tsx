@@ -1,19 +1,22 @@
-import Footer from "../components/footer";
-import NavBar from "../components/navbar";
-import AutoComplete from "@/pages/autoComplete";
-import metiers from "../public/metiers.json";
-import AutoCompleteCities from "@/autoCompleteCities";
+import Footer from "../../components/footer";
+import NavBar from "../../components/navbar";
+import metiers from "../../data/metiers.json";
 
-export default function Home() {
+export default function Start() {
     return (
         <main>
             <NavBar />
-            <h1 className="text-3xl font-bold mt-12 tracking-tight text-black">
+            <h1 className="text-3xl font-bold mt-8 tracking-tight text-black">
                 Créer un nouvel entretien
             </h1>
+            <p className="text-sm mt-1 text-black/60">
+                Remplissez ce formulaire pour créer un nouvel entretien vidéo.
+                Notre service vous fournira ensuite un lien unique à partager
+                avec le candidat.
+            </p>
             <form
                 className="p-7 rounded-lg border border-black/10 bg-white/40 w-full mt-4 text-black"
-                action="/api/create-interview"
+                action="/candidature/link"
                 method="GET"
             >
                 <div>
@@ -24,47 +27,53 @@ export default function Home() {
                         <div className="flex flex-col gap-1 w-full">
                             <label
                                 className="text-sm font-bold"
-                                htmlFor="prenom_candidat"
+                                htmlFor="candidat_prenom"
                             >
-                                Prénom
+                                Prénom *
                             </label>
                             <input
                                 type="text"
-                                id="prenom_candidat"
+                                id="candidat_prenom"
                                 placeholder="John"
                                 className="border border-black/10 p-2  bg-white rounded-md text-sm"
-                                name="prenom_candidat"
+                                name="candidat_prenom"
+                                required
+                                autoComplete="nickname"
                             />
                         </div>
                         <div className="flex flex-col gap-1 w-full">
                             <label
                                 className="text-sm font-bold"
-                                htmlFor="nom_candidat"
+                                htmlFor="candidat_nom"
                             >
-                                Nom
+                                Nom *
                             </label>
                             <input
                                 type="text"
-                                id="nom_candidat"
+                                id="candidat_nom"
                                 placeholder="Doe"
                                 className="border border-black/10 p-2 bg-white rounded-md text-sm"
-                                name="nom_candidat"
+                                name="candidat_nom"
+                                required
+                                autoComplete="family-name"
                             />
                         </div>
                     </div>
                     <div className="flex flex-col gap-1 w-full mt-4">
                         <label
                             className="text-sm font-bold"
-                            htmlFor="email_candidat"
+                            htmlFor="candidat_email"
                         >
-                            Email
+                            Email *
                         </label>
                         <input
                             type="email"
-                            id="email_candidat"
+                            id="candidat_email"
                             placeholder="john.doe@example.com"
                             className="border border-black/10 p-2 bg-white rounded-md text-sm"
-                            name="email_candidat"
+                            name="candidat_email"
+                            required
+                            autoComplete="email"
                         />
                     </div>
                 </div>
@@ -72,62 +81,90 @@ export default function Home() {
                     <h2 className="text-xl font-bold mb-3 tracking-tighter ">
                         Employeur
                     </h2>
-                    <div className="flex gap-3 w-full justify-between">
+                    <div className="flex gap-3 justify-between">
                         <div className="flex flex-col gap-1 w-full">
                             <label
                                 className="text-sm font-bold"
-                                htmlFor="prenom_recruteur"
+                                htmlFor="recruteur_nom"
                             >
-                                Prénom
+                                Nom *
                             </label>
                             <input
                                 type="text"
-                                id="prenom_recruteur"
-                                placeholder="John"
-                                className="border border-black/10 p-2  bg-white rounded-md text-sm"
-                            />
-                        </div>
-                        <div className="flex flex-col gap-1 w-full">
-                            <label
-                                className="text-sm font-bold"
-                                htmlFor="nom_recruteur"
-                            >
-                                Nom
-                            </label>
-                            <input
-                                type="text"
-                                id="nom_recruteur"
+                                id="recruteur_nom"
                                 placeholder="Doe"
                                 className="border border-black/10 p-2 bg-white rounded-md text-sm"
+                                name="recruteur_nom"
+                                required
+                                autoComplete="family-name"
                             />
                         </div>
                     </div>
-                    <div className="flex flex-col gap-1 w-full mt-4">
+                    <div className="flex flex-col gap-1  mt-4">
                         <label
                             className="text-sm font-bold"
-                            htmlFor="email_recruteur"
+                            htmlFor="recruteur_email"
                         >
-                            Email
+                            Email *
                         </label>
                         <input
                             type="email"
-                            id="email_recruteur"
+                            id="recruteur_email"
                             placeholder="john.doe@example.com"
                             className="border border-black/10 p-2 bg-white rounded-md text-sm"
+                            name="recruteur_email"
+                            required
+                            autoComplete="email"
                         />
                     </div>
                 </div>
-
                 <div className="pt-4 mt-6 border-t border-black/10">
                     <h2 className="text-xl font-bold mb-3 tracking-tighter ">
                         Fiche d&apos;emploi
                     </h2>
-
                     <div className="flex gap-3 w-full justify-between">
-                       <AutoComplete/>
-                        <AutoCompleteCities/>
+                        <div className="flex flex-col gap-1 max-w-[50%]">
+                            <label
+                                className="text-sm font-bold"
+                                htmlFor="type_emploi"
+                            >
+                                Type d&apos;emploi *
+                            </label>
+                            <select
+                                id="type_emploi"
+                                className="border border-black/10 p-2  bg-white rounded-md text-sm"
+                                name="type_emploi"
+                                required
+                            >
+                                {metiers.map((metier, i) => (
+                                    <option
+                                        value={metier.libelle}
+                                        key={metier.libelle}
+                                        selected={i === 0}
+                                    >
+                                        {metier.libelle}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="flex flex-col gap-1 w-full">
+                            <label
+                                className="text-sm font-bold"
+                                htmlFor="emplacement"
+                            >
+                                Emplacement *
+                            </label>
+                            <input
+                                type="text"
+                                id="emplacement"
+                                placeholder="Pau, Pyrénées-Atlantiques"
+                                className="border border-black/10 p-2 bg-white rounded-md text-sm"
+                                name="emplacement"
+                                required
+                                minLength={3}
+                            />
+                        </div>
                     </div>
-
                     <div className="flex flex-col gap-1 w-full mt-4">
                         <label
                             className="text-sm font-bold"

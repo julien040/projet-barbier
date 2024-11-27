@@ -1,8 +1,9 @@
 import Footer from "../../components/footer";
 import NavBar from "../../components/navbar";
-import metiers from "../../data/metiers.json";
+import AutoComplete from "@/pages/autoComplete";
+import AutoCompleteCities from "@/autoCompleteCities";
 
-export default function Start() {
+export default function Home() {
     return (
         <main>
             <NavBar />
@@ -118,53 +119,17 @@ export default function Start() {
                         />
                     </div>
                 </div>
+
                 <div className="pt-4 mt-6 border-t border-black/10">
                     <h2 className="text-xl font-bold mb-3 tracking-tighter ">
                         Fiche d&apos;emploi
                     </h2>
+
                     <div className="flex gap-3 w-full justify-between">
-                        <div className="flex flex-col gap-1 max-w-[50%]">
-                            <label
-                                className="text-sm font-bold"
-                                htmlFor="type_emploi"
-                            >
-                                Type d&apos;emploi *
-                            </label>
-                            <select
-                                id="type_emploi"
-                                className="border border-black/10 p-2  bg-white rounded-md text-sm"
-                                name="type_emploi"
-                                required
-                            >
-                                {metiers.map((metier, i) => (
-                                    <option
-                                        value={metier.libelle}
-                                        key={metier.libelle}
-                                        selected={i === 0}
-                                    >
-                                        {metier.libelle}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="flex flex-col gap-1 w-full">
-                            <label
-                                className="text-sm font-bold"
-                                htmlFor="emplacement"
-                            >
-                                Emplacement *
-                            </label>
-                            <input
-                                type="text"
-                                id="emplacement"
-                                placeholder="Pau, Pyrénées-Atlantiques"
-                                className="border border-black/10 p-2 bg-white rounded-md text-sm"
-                                name="emplacement"
-                                required
-                                minLength={3}
-                            />
-                        </div>
+                        <AutoComplete />
+                        <AutoCompleteCities />
                     </div>
+
                     <div className="flex flex-col gap-1 w-full mt-4">
                         <label
                             className="text-sm font-bold"

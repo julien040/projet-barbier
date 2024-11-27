@@ -124,8 +124,8 @@ export default function Home() {
                     </h2>
 
                     <div className="flex gap-3 w-full justify-between">
-                        <AutoComplete />
-                        <AutoCompleteCities />
+                       <AutoComplete/>
+                        <AutoCompleteCities/>
                     </div>
 
                     <div className="flex flex-col gap-1 w-full mt-4">
@@ -143,7 +143,6 @@ export default function Home() {
                         />
                     </div>
                 </div>
-
                 <button
                     type="submit"
                     className="bg-white text-black/90 rounded-md p-3 w-full mt-6 font-semibold text-sm"

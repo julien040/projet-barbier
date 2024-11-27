@@ -1,4 +1,5 @@
 type candidature = {
+    id: number;
     candidat_prenom: string;
     candidat_nom: string;
     candidat_email: string;

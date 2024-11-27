@@ -19,16 +19,21 @@ const Controller = async (req: Request, res: Response) => {
     const candidature = new Candidature();
 
     // Retrieve in the request url parameters the values of the candidature
-    console.log(req.query);
-    candidature.candidat_prenom = checkString(req.query.candidat_prenom);
-    candidature.candidat_nom = checkString(req.query.candidat_nom);
-    candidature.candidat_email = checkString(req.query.candidat_email);
+    try {
+        console.log(req.query);
+        candidature.candidat_prenom = checkString(req.query.candidat_prenom);
+        candidature.candidat_nom = checkString(req.query.candidat_nom);
+        candidature.candidat_email = checkString(req.query.candidat_email);
 
-    candidature.employeur_nom = checkString(req.query.recruteur_nom);
-    candidature.employeur_email = checkString(req.query.recruteur_email);
+        candidature.employeur_nom = checkString(req.query.recruteur_nom);
+        candidature.employeur_email = checkString(req.query.recruteur_email);
 
-    candidature.formulaire_metier = checkString(req.query.type_emploi);
-    candidature.formulaire_emplacement = checkString(req.query.emplacement);
+        candidature.formulaire_metier = checkString(req.query.type_emploi);
+        candidature.formulaire_emplacement = checkString(req.query.emplacement);
+    } catch (error: any) {
+        res.status(400).json({ message: error.message });
+        return;
+    }
 
     candidature.formulaire_info_supplementaire =
         typeof req.query.informations_supplementaires === "string"

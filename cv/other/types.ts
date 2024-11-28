@@ -14,6 +14,8 @@ type candidature = {
         scoreConfiance: number;
         conclusion: string;
     };
+    video_path: string;
+    video_remodele_path: string;
     message: string;
 };
 

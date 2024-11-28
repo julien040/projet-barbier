@@ -4,6 +4,8 @@ dotenv.config({
     path: "../.env",
 });
 
+import { mkdir } from "fs";
+
 import { AppDataSource } from "./data-source";
 import express from "express";
 
@@ -18,6 +20,14 @@ const port = process.env.API_PORT || 3000;
 if (process.env.DATABASE_URL === undefined) {
     throw new Error("DATABASE_URL is not defined");
 }
+
+// Create the storage folder if it does not exist
+const storageFolder = "storage";
+mkdir(storageFolder, { recursive: true }, (error) => {
+    if (error) {
+        throw error;
+    }
+});
 
 // Initialize the database
 AppDataSource.initialize()

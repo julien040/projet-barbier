@@ -10,10 +10,14 @@ import { AppDataSource } from "./data-source";
 import express from "express";
 
 import { apiV1 } from "./controller/index";
+import { join } from "path";
 
 // Define the HTTP server
 const app = express();
 app.use("/v1", apiV1);
+
+// Serve the /storage folder
+app.use("/storage", express.static(join(__dirname, "..", "storage")));
 
 // Ensure settings are correct
 const port = process.env.API_PORT || 3000;

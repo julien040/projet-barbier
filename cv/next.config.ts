@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
                 destination: "http://localhost:3001/v1/uploadVideo",
                 source: "/api/upload",
             },
+            {
+                destination: "http://localhost:3001/storage/:path*",
+                source: "/video/:path*",
+            },
         ];
     },
 };

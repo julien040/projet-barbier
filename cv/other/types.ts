@@ -9,14 +9,21 @@ type candidature = {
     emplacement: string;
     informations_supplementaires: string;
     resultat: {
-        scoreDistance: number;
-        scoreMetier: number;
-        scoreConfiance: number;
+        score: number;
+        villeCandidat: string;
+        metierCandidat: string;
         conclusion: string;
+        segments: Array<{
+            start: number;
+            end: number;
+        }>;
+        competences: Array<string>;
     };
     video_path: string;
     video_remodele_path: string;
     message: string;
+    status: string;
+    transcription: string;
 };
 
 export type { candidature };

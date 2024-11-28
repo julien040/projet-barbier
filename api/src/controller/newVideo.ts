@@ -47,9 +47,11 @@ const Controller = async (req: Request, res: Response) => {
     candidature.status = "En attente";
     candidature.resultat = {
         conclusion: "",
-        scoreConfiance: 0,
-        scoreDistance: 0,
-        scoreMetier: 0,
+        score: 0,
+        metierCandidat: "",
+        segments: [],
+        villeCandidat: "",
+        competences: [],
     };
 
     // Validate the Candidature

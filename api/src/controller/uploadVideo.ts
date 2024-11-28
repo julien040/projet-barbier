@@ -4,6 +4,7 @@ import { cp, rm } from "fs/promises";
 import { join } from "path";
 import { AppDataSource } from "../data-source";
 import { Candidature } from "../entity/Candidature";
+import { computePipeline } from "../pipeline/pipeline";
 
 const Controller = async (req: Request, res: Response) => {
     const form = new Formidable();
@@ -26,6 +27,11 @@ const Controller = async (req: Request, res: Response) => {
         res.status(400).json({
             message: "Le fichier doit être un fichier vidéo",
         });
+        return;
+    }
+
+    if (!fields.id) {
+        res.status(400).json({ message: "ID manquant" });
         return;
     }
 
@@ -52,6 +58,9 @@ const Controller = async (req: Request, res: Response) => {
 
     // Respond with the new path
     res.json({ message: "Fichier reçu", path: newPath });
+
+    // Asynchronously process the video
+    computePipeline(newFilename, fields.id[0]);
 };
 
 export default Controller;

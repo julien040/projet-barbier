@@ -22,6 +22,13 @@ export const getServerSideProps = (async (
     console.log("URL to fetch: ", urlToFetch);
     const res = await fetch(urlToFetch);
     const data = await res.json();
+    if (!res.ok) {
+        return {
+            props: {
+                candidature: null,
+            },
+        };
+    }
     return {
         props: {
             candidature: data,
@@ -32,10 +39,11 @@ export const getServerSideProps = (async (
 export default function Record({
     candidature,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+    console.log(candidature);
     return (
         <main>
             <NavBar />
-            {candidature && (
+            {candidature && !candidature.video_path && (
                 <div>
                     <h1 className="text-3xl font-bold mt-8 tracking-tight text-black">
                         Enregistrez votre CV vidéo
@@ -84,7 +92,27 @@ export default function Record({
                 </div>
             )}
             {!candidature && (
-                <p>Impossible de trouver la candidature. Vérifiez le lien</p>
+                <div
+                    className="flex flex-col bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative w-full mt-4"
+                    role="alert"
+                >
+                    <strong className="font-bold">Erreur !</strong>
+                    <p className="text-sm">
+                        Impossible de récupérer les informations de la
+                        candidature. Vérifiez que le lien est correct.
+                    </p>
+                </div>
+            )}
+            {candidature && candidature.video_path && (
+                <div
+                    className="flex flex-col bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative w-full mt-4"
+                    role="alert"
+                >
+                    <strong className="font-bold">Erreur !</strong>
+                    <p className="text-sm">
+                        Vous avez déjà enregistré votre vidéo
+                    </p>
+                </div>
             )}
             <Footer />
         </main>
@@ -150,8 +178,15 @@ const DragAndDrop = ({ candidature }: { candidature: candidature }) => {
         })
             .then((response) => {
                 if (response.ok) {
-                    setMessage("Fichier téléchargé avec succès");
+                    setMessage(
+                        "Fichier téléchargé avec succès. Redirection..."
+                    );
                     setState(DragAndDropState.SUCCESS);
+
+                    // Reload the page to /candidature/success
+                    setTimeout(() => {
+                        window.location.href = "/candidature/success";
+                    }, 1500);
                 } else {
                     setMessage("Erreur lors du téléchargement");
                     setState(DragAndDropState.ERROR);

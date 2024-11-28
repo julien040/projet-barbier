@@ -63,8 +63,15 @@ export class Candidature {
 }
 
 interface ResultatCandidature {
-    scoreDistance: number;
-    scoreMetier: number;
-    scoreConfiance: number;
+    score: number;
+    villeCandidat: string;
+    metierCandidat: string;
     conclusion: string;
+    segments: Array<{
+        start: number;
+        end: number;
+    }>;
+    competences: Array<string>;
 }
+
+export type { ResultatCandidature };

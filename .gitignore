@@ -1,4 +1,3 @@
-
 # Node template downloaded with gut
 
 ### Node ###
@@ -144,3 +143,5 @@ dist
 .svelte-kit
 
 .gut
+
+.DS_Store

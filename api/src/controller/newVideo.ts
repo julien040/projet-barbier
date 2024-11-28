@@ -28,7 +28,7 @@ const Controller = async (req: Request, res: Response) => {
         candidature.employeur_nom = checkString(req.query.recruteur_nom);
         candidature.employeur_email = checkString(req.query.recruteur_email);
 
-        candidature.formulaire_metier = checkString(req.query.type_emploi);
+        candidature.formulaire_metier = checkString(req.query.metier);
         candidature.formulaire_emplacement = checkString(req.query.emplacement);
     } catch (error: any) {
         res.status(400).json({ message: error.message });
@@ -47,9 +47,11 @@ const Controller = async (req: Request, res: Response) => {
     candidature.status = "En attente";
     candidature.resultat = {
         conclusion: "",
-        scoreConfiance: 0,
-        scoreDistance: 0,
-        scoreMetier: 0,
+        score: 0,
+        metierCandidat: "",
+        segments: [],
+        villeCandidat: "",
+        competences: [],
     };
 
     // Validate the Candidature

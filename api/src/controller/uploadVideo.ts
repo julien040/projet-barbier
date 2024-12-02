@@ -48,6 +48,7 @@ const Controller = async (req: Request, res: Response) => {
     const candidatureRepository = await AppDataSource.createQueryBuilder()
         .update(Candidature)
         .set({ video_path: newFilename })
+        .set({ status: "CV soumis" })
         .where("id = :id", { id: fields.id })
         .execute();
 

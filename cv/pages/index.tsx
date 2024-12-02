@@ -19,7 +19,7 @@ export default function Home() {
                 </div>
                 <div className="flex gap-4">
                     <a
-                        className="px-6 py-2 bg-[#ffee6f] rounded-md text-black text-sm font-semibold hover:bg-[#fce745] transition-all"
+                        className="px-6 py-2 flex items-center bg-[#ffee6f] rounded-md text-black text-sm font-semibold hover:bg-[#fce745] transition-all"
                         href="/candidature/start"
                     >
                         Commencer
@@ -28,7 +28,7 @@ export default function Home() {
                         className="px-6 py-2 rounded-md text-white text-sm font-semibold bg-white/10  transition-all border  border-yellow-300"
                         href="#fonctionnement"
                     >
-                        En apprendre plus
+                        Fonctionnement
                     </a>
                 </div>
                 <div className="h-60"></div>

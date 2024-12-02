@@ -105,13 +105,18 @@ export default function Record({
             )}
             {candidature && candidature.video_path && (
                 <div
-                    className="flex flex-col bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative w-full mt-4"
+                    className="flex flex-col bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative w-full mt-4 text-sm"
                     role="alert"
                 >
                     <strong className="font-bold">Erreur !</strong>
-                    <p className="text-sm">
-                        Vous avez déjà enregistré votre vidéo
-                    </p>
+                    <p className="">Vous avez déjà enregistré votre vidéo</p>
+                    <br />
+                    <a
+                        className="hover:underline"
+                        href={"/candidature/result?id=" + candidature.id}
+                    >
+                        🔗 Voir le résultat
+                    </a>
                 </div>
             )}
             <Footer />

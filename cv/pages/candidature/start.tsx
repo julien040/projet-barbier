@@ -7,7 +7,7 @@ export default function Home() {
     return (
         <main>
             <NavBar />
-            <h1 className="text-3xl font-bold mt-8 tracking-tight text-black">
+            <h1 className="text-2xl md:text-3xl font-bold mt-8 tracking-tight text-black">
                 Créer un nouvel entretien
             </h1>
             <p className="text-sm mt-1 text-black/60">
@@ -42,23 +42,23 @@ export default function Home() {
                                 autoComplete="nickname"
                             />
                         </div>
-                        <div className="flex flex-col gap-1 w-full">
-                            <label
-                                className="text-sm font-bold"
-                                htmlFor="candidat_nom"
-                            >
-                                Nom *
-                            </label>
-                            <input
-                                type="text"
-                                id="candidat_nom"
-                                placeholder="Doe"
-                                className="border border-black/10 p-2 bg-white rounded-md text-sm"
-                                name="candidat_nom"
-                                required
-                                autoComplete="family-name"
-                            />
-                        </div>
+                    </div>
+                    <div className="flex flex-col gap-1 w-full mt-4">
+                        <label
+                            className="text-sm font-bold"
+                            htmlFor="candidat_nom"
+                        >
+                            Nom *
+                        </label>
+                        <input
+                            type="text"
+                            id="candidat_nom"
+                            placeholder="Doe"
+                            className="border border-black/10 p-2 bg-white rounded-md text-sm"
+                            name="candidat_nom"
+                            required
+                            autoComplete="family-name"
+                        />
                     </div>
                     <div className="flex flex-col gap-1 w-full mt-4">
                         <label
@@ -127,6 +127,9 @@ export default function Home() {
 
                     <div className="flex gap-3 w-full justify-between">
                         <AutoComplete />
+                    </div>
+
+                    <div className="mt-4">
                         <AutoCompleteCities />
                     </div>
 

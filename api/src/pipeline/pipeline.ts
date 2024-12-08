@@ -37,6 +37,7 @@ async function computePipeline(videoName: string, dbID: string): Promise<void> {
     if (!candidature) {
         throw new Error("Candidature not found");
     }
+    console.log("Candidature found in pipeline", candidature);
 
     // Extract the transcript
     console.log("Extracting the transcript");
@@ -66,7 +67,7 @@ async function computePipeline(videoName: string, dbID: string): Promise<void> {
     candidature.video_remodele_path = basename(newVideoPath);
     candidature.status = "Analyse terminée";
 
-    console.log("Saving the result in the database");
+    console.log("Saving the result in the database", candidature);
     await AppDataSource.getRepository(Candidature).save(candidature);
 
     return;

@@ -8,8 +8,10 @@ import type {
 import type { candidature } from "../../other/types";
 import { useState } from "react";
 import { clsx } from "clsx";
-import { useRecordWebcam, ERROR_MESSAGES } from "react-record-webcam";
-import type {} from "react-record-webcam";
+import {
+    useRecordWebcam,
+    ERROR_MESSAGES,
+} from "../../components/react-record-webcam/dist/index.js";
 import ErrorComponent from "../../components/error";
 
 type Recording = {

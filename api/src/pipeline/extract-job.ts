@@ -103,6 +103,7 @@ async function resumeTranscript(
                     "Vos critères sont l'expérience du candidat, ses compétences, sa motivation et comment il correspond à la description du poste." +
                     "Vous retournerez également un score de pertinence pour la candidature, de 0 à 100." +
                     "Vous devez aussi extraire les compétences du candidat qui sont pertinentes pour le poste." +
+                    "Si le texte n'a pas de sens, ou aucune information n'est donnée par rapport au poste, vous pouvez mettre 'Inconnu', mettre un score de pertinence de 0, et écrire Candidature non conforme comme conclusion" +
                     "Votre résumé doit toujours être retourné en français.",
             },
             {

@@ -1,5 +1,5 @@
 import ffmpeg from "fluent-ffmpeg";
-import { basename, join, resolve } from "path";
+import { basename, join, resolve, extname } from "path";
 import { storageFolder } from "./folder";
 type ExtractAudioResult = {
     audioPath: string;
@@ -7,9 +7,10 @@ type ExtractAudioResult = {
 
 function extractAudio(videoPath: string): Promise<ExtractAudioResult> {
     return new Promise((resolve, reject) => {
+        const extensionName = extname(videoPath);
         const audioPath = join(
             storageFolder,
-            `audio-${basename(videoPath).replace(".mp4", ".mp3")}`
+            `audio-${basename(videoPath).replace(extensionName, ".mp3")}`
         );
 
         ffmpeg(videoPath)

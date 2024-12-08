@@ -5,8 +5,8 @@ type candidature = {
     candidat_email: string;
     recruteur_nom: string;
     recruteur_email: string;
-    type_emploi: string;
-    emplacement: string;
+    formulaire_metier: string;
+    formulaire_emplacement: string;
     informations_supplementaires: string;
     resultat: {
         score: number;

@@ -23,31 +23,42 @@ const Controller = async (req: Request, res: Response) => {
     const file = files.file[0];
     const oldPath = file.filepath;
 
-    if (file.mimetype !== "video/mp4") {
+    if (
+        !file.mimetype?.startsWith("video/mp4") &&
+        !file.mimetype?.startsWith("video/webm")
+    ) {
+        console.log("Received file with wrong mimetype", file.mimetype);
         res.status(400).json({
-            message: "Le fichier doit être un fichier vidéo",
+            message: "Le fichier doit être un fichier vidéo (mp4 ou webm)",
         });
         return;
     }
 
     if (!fields.id) {
+        console.log("Missing ID on the request");
         res.status(400).json({ message: "ID manquant" });
         return;
     }
 
-    const newFilename = `${Date.now()}-${file.newFilename}.mp4`;
+    // Generate a new filename
+
+    const newFilename = `${Date.now()}-${file.newFilename}.${
+        file.mimetype.startsWith("video/mp4") ? "mp4" : "webm"
+    }`;
 
     // Move the file to the storage folder
     const newPath = join(__dirname, "../../storage", newFilename);
+    console.log("Moving file", oldPath, newPath);
     await cp(oldPath, newPath);
 
     // Remove the temporary file
+    console.log("Removing temporary file", oldPath);
     await rm(oldPath);
 
     // Update the database
     const candidatureRepository = await AppDataSource.createQueryBuilder()
         .update(Candidature)
-        .set({ video_path: newFilename })
+        .set({ status: "CV soumis", video_path: newFilename })
         .where("id = :id", { id: fields.id })
         .execute();
 
@@ -56,10 +67,13 @@ const Controller = async (req: Request, res: Response) => {
         return;
     }
 
+    console.log("Candidature updated in the database");
+
     // Respond with the new path
     res.json({ message: "Fichier reçu", path: newPath });
 
     // Asynchronously process the video
+    console.log("Processing the video");
     computePipeline(newFilename, fields.id[0]);
 };
 

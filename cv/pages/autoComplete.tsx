@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent } from "react";
 
 // Définir un type pour chaque métier
 interface Metier {
@@ -13,9 +13,9 @@ const AutoComplete: React.FC = () => {
 
     // Charger les métiers depuis le fichier JSON
     useEffect(() => {
-        fetch('/metiers.json')
-            .then(response => response.json())
-            .then(data => setMetiers(data));
+        fetch("/metiers.json")
+            .then((response) => response.json())
+            .then((data) => setMetiers(data));
     }, []);
 
     // Fonction pour mettre à jour les suggestions
@@ -24,9 +24,11 @@ const AutoComplete: React.FC = () => {
         setInput(value);
         if (value) {
             // Filtrer sur le champ `libelle`
-            setSuggestions(metiers.filter(metier =>
-                metier.libelle.toLowerCase().includes(value.toLowerCase())
-            ));
+            setSuggestions(
+                metiers.filter((metier) =>
+                    metier.libelle.toLowerCase().includes(value.toLowerCase())
+                )
+            );
         } else {
             setSuggestions([]); // Réinitialiser les suggestions si l'input est vide
         }
@@ -39,22 +41,19 @@ const AutoComplete: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col gap-1 max-w-[50%] ">
-            <label
-                className="text-sm font-bold "
-                htmlFor="type_emploi"
-            >
+        <div className="flex flex-col gap-1 w-full">
+            <label className="text-sm font-bold " htmlFor="type_emploi">
                 Type d&apos;emploi
-                <input
-                    type="text"
-                    id="metier"
-                    value={input}
-                    onChange={handleChange}
-                    placeholder="Commencez à taper..."
-                    className="border border-black/10 p-2 bg-white rounded-md text-sm"
-                    name ="metier"
-                />
             </label>
+            <input
+                type="text"
+                id="metier"
+                value={input}
+                onChange={handleChange}
+                placeholder="Commencez à taper..."
+                className="border border-black/10 p-2 bg-white rounded-md text-sm"
+                name="metier"
+            />
 
             {suggestions.length > 0 && (
                 <ul className="border border-gray-300 rounded mt-1 bg-white shadow-lg">

@@ -8,6 +8,7 @@ import type {
 import type { candidature } from "../../other/types";
 import { useState } from "react";
 import { clsx } from "clsx";
+import ErrorComponent from "../../components/error";
 
 // TODO: récupérer les informations depuis l'API et vérifier que la vidéo n'est pas déjà enregistrée
 
@@ -42,10 +43,14 @@ export default function Record({
     return (
         <main className="text-black">
             <NavBar />
-            <VideoPlayer
-                src={"/video/" + candidature.video_path}
-                srcRemod={"/video/" + candidature.video_remodele_path}
-            />
+            {candidature &&
+                candidature.video_path &&
+                candidature.video_remodele_path && (
+                    <VideoPlayer
+                        src={"/video/" + candidature.video_path}
+                        srcRemod={"/video/" + candidature.video_remodele_path}
+                    />
+                )}
             <DataInfos candidature={candidature} />
             <Footer />
         </main>
@@ -53,6 +58,26 @@ export default function Record({
 }
 
 const DataInfos = ({ candidature }: { candidature: candidature }) => {
+    if (!candidature) {
+        return <ErrorComponent message="Aucune candidature trouvée" />;
+    }
+
+    if (!candidature.video_path || candidature.video_path === "") {
+        return (
+            <ErrorComponent message="Le candidat n'a pas encore enregistré de vidéo" />
+        );
+    }
+
+    if (
+        !candidature.video_remodele_path ||
+        candidature.video_remodele_path === "" ||
+        candidature.status === "CV soumis"
+    ) {
+        return (
+            <ErrorComponent message="La vidéo n'a pas encore été traitée mais l'utilisateur l'a envoyée. Revenez ici dans quelques minutes" />
+        );
+    }
+
     return (
         <div className="py-6 flex flex-col-reverse md:flex-row gap-4">
             <div className="flex flex-col md:basis-3/4 basis-full">
@@ -110,7 +135,7 @@ const DataInfos = ({ candidature }: { candidature: candidature }) => {
                     Compétences
                 </h2>
                 <ul className="text-sm text-black list-disc list-inside">
-                    {candidature.resultat.competences.map((competence) => (
+                    {candidature.resultat.competences?.map((competence) => (
                         <li key={competence}>{competence}</li>
                     ))}
                 </ul>
@@ -124,7 +149,7 @@ const VideoPlayer = ({ src, srcRemod }: { src: string; srcRemod: string }) => {
     const [isRemod, setIsRemod] = useState(false);
 
     return (
-        <div className="flex flex-col items-center mt-8">
+        <div className="flex flex-col items-center mt-5">
             <video
                 className="rounded-lg w-full aspect-video"
                 src={isRemod ? srcRemod : src}

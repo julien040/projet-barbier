@@ -8,8 +8,72 @@ import type {
 import type { candidature } from "../../other/types";
 import { useState } from "react";
 import { clsx } from "clsx";
+import { useRecordWebcam, ERROR_MESSAGES } from "react-record-webcam";
+import type {} from "react-record-webcam";
+import ErrorComponent from "../../components/error";
 
-// TODO: récupérer les informations depuis l'API et vérifier que la vidéo n'est pas déjà enregistrée
+type Recording = {
+    /**
+     * @property {string} id - The ID of the recording.
+     */
+    id: string;
+    /**
+     * @property {string} id - The ID of the audio device.
+     */
+    audioId: string;
+    /**
+     * @property {string} [audioLabel] - The label of the audio device.
+     */
+    audioLabel?: string;
+    /**
+     * @property {Blob} [blob] - The blob of the recording.
+     */
+    blob?: Blob;
+    /**
+     * @property {Blob[]} blobChunks - Single blob or chunks per timeslice of the recording.
+     */
+    blobChunks: Blob[];
+    /**
+     * @property {string} fileName - The name of the file.
+     */
+    fileName: string;
+    /**
+     * @property {string} fileType - The type of the file.
+     */
+    fileType: string;
+    /**
+     * @property {boolean} isMuted - Whether the recording is muted.
+     */
+    isMuted: boolean;
+    /**
+     * @property {string} mimeType - The MIME type of the recording.
+     */
+    mimeType: string;
+    /**
+     * @property {string | null} objectURL - The object URL of the recording.
+     */
+    objectURL: string | null;
+    /**
+     * @property {React.RefObject<HTMLVideoElement>} previewRef - React Ref for the preview element.
+     */
+    previewRef: React.RefObject<HTMLVideoElement>;
+    /**
+     * @property {MediaRecorder | null} recorder - The MediaRecoder instance of the recording.
+     */
+    recorder: MediaRecorder | null;
+    /**
+     * @property {string} videoId - The ID of the video device.
+     */
+    videoId: string;
+    /**
+     * @property {string} [videoLabel] - The label of the video device.
+     */
+    videoLabel?: string;
+    /**
+     * @property {React.RefObject<HTMLVideoElement>} webcamRef - React Ref for the webcam element.
+     */
+    webcamRef: React.RefObject<HTMLVideoElement>;
+};
 
 export const getServerSideProps = (async (
     context: GetServerSidePropsContext
@@ -105,13 +169,18 @@ export default function Record({
             )}
             {candidature && candidature.video_path && (
                 <div
-                    className="flex flex-col bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative w-full mt-4"
+                    className="flex flex-col bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative w-full mt-4 text-sm"
                     role="alert"
                 >
                     <strong className="font-bold">Erreur !</strong>
-                    <p className="text-sm">
-                        Vous avez déjà enregistré votre vidéo
-                    </p>
+                    <p className="">Vous avez déjà enregistré votre vidéo</p>
+                    <br />
+                    <a
+                        className="hover:underline"
+                        href={"/candidature/result?id=" + candidature.id}
+                    >
+                        🔗 Voir le résultat
+                    </a>
                 </div>
             )}
             <Footer />
@@ -119,15 +188,224 @@ export default function Record({
     );
 }
 
+enum WebcamRecorderState {
+    NOT_STARTED,
+    STARTED,
+    RECORDING,
+    PAUSED,
+    UPLOADING,
+    UPLOADED,
+    ERROR,
+}
+
 const WebcamRecorder = ({ candidature }: { candidature: candidature }) => {
-    const urlToUpload = "/api/upload?id=" + candidature.id;
-    console.log(urlToUpload);
+    const [Recording, setRecording] = useState<Recording | null>(null);
+    const [Error, setError] = useState("");
+    const [WebcamState, setWebcamState] = useState(
+        WebcamRecorderState.NOT_STARTED
+    );
+    const {
+        createRecording,
+        openCamera,
+        startRecording,
+        stopRecording,
+        resumeRecording,
+        pauseRecording,
+        errorMessage,
+    } = useRecordWebcam({
+        mediaTrackConstraints: {
+            aspectRatio: 1.7777777778,
+            facingMode: "user",
+            noiseSuppression: true,
+            echoCancellation: true,
+        },
+    });
+    const handleFirstRecording = () => {
+        if (WebcamState !== WebcamRecorderState.NOT_STARTED) {
+            return;
+        }
+        createRecording()
+            .then((recording) => {
+                console.log("Recording created");
+                console.log(recording);
+                if (!recording) {
+                    return;
+                }
+                setRecording(recording);
+                return openCamera(recording.id);
+            })
+            .then((r) => {
+                console.log("Camera opened");
+                console.log(r);
+                if (!r) {
+                    return;
+                }
+                return startRecording(r.id);
+            })
+            .then((r) => {
+                console.log("Recording started");
+                console.log(r);
+                if (!r) {
+                    return;
+                }
+                setWebcamState(WebcamRecorderState.STARTED);
+            })
+            .catch((e) => {
+                setError("Erreur lors de l'ouverture de la caméra" + e);
+                setWebcamState(WebcamRecorderState.ERROR);
+            });
+    };
+
+    const handleStartRecording = () => {
+        if (!Recording) {
+            return;
+        }
+        if (WebcamState === WebcamRecorderState.PAUSED) {
+            resumeRecording(Recording.id);
+            setWebcamState(WebcamRecorderState.RECORDING);
+            return;
+        }
+
+        if (WebcamState !== WebcamRecorderState.STARTED) {
+            return;
+        }
+
+        startRecording(Recording.id);
+        setWebcamState(WebcamRecorderState.RECORDING);
+    };
+
+    const handleStopRecording = () => {
+        if (!Recording) {
+            return;
+        }
+        if (WebcamState !== WebcamRecorderState.RECORDING) {
+            return;
+        }
+        pauseRecording(Recording.id);
+        setWebcamState(WebcamRecorderState.PAUSED);
+    };
+
+    const handleDownloadRecording = () => {
+        if (!Recording) {
+            return;
+        }
+        if (WebcamState !== WebcamRecorderState.PAUSED) {
+            return;
+        }
+        stopRecording(Recording.id)
+            .then((r) => {
+                if (!r) {
+                    return;
+                }
+                const body = new FormData();
+                if (!r.blob) {
+                    return;
+                }
+                body.append("file", r.blob);
+                body.append("id", candidature.id.toString());
+                setWebcamState(WebcamRecorderState.UPLOADING);
+                return fetch("/api/upload", {
+                    method: "POST",
+                    body: body,
+                });
+            })
+            .then((res) => {
+                if (!res) {
+                    return;
+                }
+                if (res.ok) {
+                    setWebcamState(WebcamRecorderState.UPLOADED);
+                    setTimeout(() => {
+                        window.location.href =
+                            "/candidature/success?id=" + candidature.id;
+                    }, 1500);
+                }
+            })
+            .catch((e) => {
+                setError("Erreur lors du téléchargement de la vidéo" + e);
+                setWebcamState(WebcamRecorderState.ERROR);
+            });
+    };
+
+    if (errorMessage == ERROR_MESSAGES.NO_USER_PERMISSION) {
+        // Request permission
+        navigator.mediaDevices.getUserMedia({ video: true }).then(() => {
+            // Permission granted
+            console.log("Permission granted");
+        });
+        return (
+            <ErrorComponent message="Vous devez autoriser l'accès à la caméra" />
+        );
+    }
+
+    if (Error) {
+        return <ErrorComponent message={Error} />;
+    }
+
     return (
         <div
             id="videomirror"
-            className="mt-4 aspect-video w-full bg-white/40 rounded-xl
-                    border border-black/10"
-        ></div>
+            className="mt-4 w-full text-black rounded-xl bg-white/40  border border-black/10 p-5"
+        >
+            <video
+                ref={Recording?.webcamRef}
+                autoPlay
+                playsInline
+                muted
+                className="w-full aspect-video border border-black/10 rounded-md"
+            />
+            <p className="text-xs text-black/40 mt-4">Menu</p>
+            <div className="flex gap-4 mt-1">
+                {!Recording && (
+                    <button
+                        onClick={handleFirstRecording}
+                        className="bg-[#f9eb7d] transition-all rounded-lg text-sm px-3 md:px-6 py-2 font-semibold border border-black/10"
+                    >
+                        Ouvrir la caméra
+                    </button>
+                )}
+                {WebcamState === WebcamRecorderState.STARTED && (
+                    <button
+                        onClick={handleStartRecording}
+                        className="bg-[#f9eb7d] transition-all rounded-lg text-sm px-3 md:px-6 py-2 font-semibold border border-black/10"
+                    >
+                        Commencer l&apos;enregistrement
+                    </button>
+                )}
+                {WebcamState === WebcamRecorderState.RECORDING && (
+                    <button
+                        onClick={handleStopRecording}
+                        className="bg-[#f9eb7d] transition-all rounded-lg text-sm px-3 md:px-6 py-2 font-semibold border border-black/10"
+                    >
+                        Mettre en pause
+                    </button>
+                )}
+                {WebcamState === WebcamRecorderState.PAUSED && (
+                    <button
+                        onClick={handleStartRecording}
+                        className="bg-[#f9eb7d] transition-all rounded-lg text-sm px-3 md:px-6 py-2 font-semibold border border-black/10"
+                    >
+                        Reprendre l&apos;enregistrement
+                    </button>
+                )}
+                {WebcamState === WebcamRecorderState.PAUSED && (
+                    <button
+                        onClick={handleDownloadRecording}
+                        className="bg-[#f9eb7d] transition-all rounded-lg text-sm px-3 md:px-6 py-2 font-semibold border border-black/10"
+                    >
+                        Upload
+                    </button>
+                )}
+                {WebcamState === WebcamRecorderState.UPLOADING && (
+                    <button
+                        disabled
+                        className="bg-[#f9eb7d] transition-all rounded-lg text-sm px-3 md:px-6 py-2 font-semibold border border-black/10"
+                    >
+                        En cours de téléchargement...
+                    </button>
+                )}
+            </div>
+        </div>
     );
 };
 
@@ -155,9 +433,9 @@ const DragAndDrop = ({ candidature }: { candidature: candidature }) => {
         }
 
         const file = e.dataTransfer.files[0];
-        if (file.type !== "video/mp4") {
+        if (file.type !== "video/mp4" && file.type !== "video/webm") {
             setMessage(
-                "Fichier invalide. Nous supportons uniquement les vidéos au format MP4"
+                "Fichier invalide. Nous supportons uniquement les vidéos au format MP4 ou WEBM"
             );
             setState(DragAndDropState.ERROR);
             return;
@@ -185,7 +463,8 @@ const DragAndDrop = ({ candidature }: { candidature: candidature }) => {
 
                     // Reload the page to /candidature/success
                     setTimeout(() => {
-                        window.location.href = "/candidature/success";
+                        window.location.href =
+                            "/candidature/success?id=" + candidature.id;
                     }, 1500);
                 } else {
                     setMessage("Erreur lors du téléchargement");

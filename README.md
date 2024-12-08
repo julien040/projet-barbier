@@ -2,6 +2,8 @@
 
 ![alt text](3JUlUkkZ.png)
 
+Ce projet correspond au [sujet 1](https://franckbarbier.com/DMiNer/Curriculum_vitae.html) des UEs Conception des applications internet et technologie orientée objet pour le semestre 5 de la licence informatique à l'Université de Pau et des Pays de l'Adour. Il a été réalisé par Julien C et Ulyana Y. Il utilise Typescript, React, MySQL et Express.
+
 Curriculum video est une plateforme pour gérer les CV vidéos de candidats. Le fonctionnement est simple:
 
 1. L'employeur crée une fiche de poste: [https://cv-video.julienc.me/candidature/start](https://cv-video.julienc.me/candidature/start)
